@@ -37,48 +37,48 @@ Trong ví dụ này, tôi thiết lập code như sau:
 
 ### 5. Extract data from source: 
 Bây giờ, tôi cần extract dữ liệu từ nguồn, trong ví dụ này tôi sẽ trích xuát từ 3 nguồn sau đó kết quả trả về các  Spark DataFrame: 
-##### FROM LOCAL DISK:
-def extract_disk(file_path):
-    df_movie_meta = spark.read.csv(file_path,sep = ',', header= True)
-    print("already extracted diskfile")
-    return df_movie_meta
-
-##### FROM POSTGRES:
-def extract_postgre():
-    df_state = spark.read.format('jdbc') \
-                    .option("url", url) \
-                    .option("query", query_postgres) \
-                    .option("user", user) \
-                    .option("password", password) \
-                    .option("driver", driver) \
-                    .load()
-    print("already extracted state data")
-    return df_state
-
-##### FROM ORACLE: 
-def extract_oracle():
-    df_imgt = spark.read.format('jdbc') \
-                    .option("url", url_dw) \
-                    .option("query", query_oracle) \
-                    .option("user", user_dw) \
-                    .option("password", password_dw) \
-                    .option("driver", driver_dw) \
-                    .load()
-    print('already extract df_oracle')
-    return df_imgt
+      ##### FROM LOCAL DISK:
+      def extract_disk(file_path):
+          df_movie_meta = spark.read.csv(file_path,sep = ',', header= True)
+          print("already extracted diskfile")
+          return df_movie_meta
+      
+      ##### FROM POSTGRES:
+      def extract_postgre():
+          df_state = spark.read.format('jdbc') \
+                          .option("url", url) \
+                          .option("query", query_postgres) \
+                          .option("user", user) \
+                          .option("password", password) \
+                          .option("driver", driver) \
+                          .load()
+          print("already extracted state data")
+          return df_state
+      
+      ##### FROM ORACLE: 
+      def extract_oracle():
+          df_imgt = spark.read.format('jdbc') \
+                          .option("url", url_dw) \
+                          .option("query", query_oracle) \
+                          .option("user", user_dw) \
+                          .option("password", password_dw) \
+                          .option("driver", driver_dw) \
+                          .load()
+          print('already extract df_oracle')
+          return df_imgt
 
 ### 6. Load to GCS:
 Giờ là bước cuối cùng, tôi thực hiện load các Spark DataFrame đã trích xuất ở phần 5 lên GCS như sau:
 
-def load_to_gcs(df_movie_meta,df_state, df_imgt, dest_lake):
-    df_list = [df_movie_meta,df_state, df_imgt]
-    check = ["df_movie_meta","df_state", "df_imgt"]
-    df_list_load = zip(df_list, check)
-    for df, name in df_list_load:
-        df.write.option("header",True) \
-        .mode("append") \
-        .csv(dest_lake)
-    print(f"already load {name} on to GCS")
+      def load_to_gcs(df_movie_meta,df_state, df_imgt, dest_lake):
+          df_list = [df_movie_meta,df_state, df_imgt]
+          check = ["df_movie_meta","df_state", "df_imgt"]
+          df_list_load = zip(df_list, check)
+          for df, name in df_list_load:
+              df.write.option("header",True) \
+              .mode("append") \
+              .csv(dest_lake)
+          print(f"already load {name} on to GCS")
 
   
 Lưu ý: khi sử dụng vòng lặp for, ta cần sử dụng phương thức mode("append")
