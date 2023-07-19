@@ -20,15 +20,15 @@ Trong Repo này tôi sẽ cung cấp ETL đơn giản để upload csv file lên
 ### 4. Tạo và cấu hình SparkSession:
 Điều quan trọn là sparksession phải kết nối được với GCS, PostgreSQL và oracle. Tôi thực hiện như sau:
 
-def create_sparksession():
-    spark = SparkSession.builder \
-            .master("local[1]") \
-            .appName("ETL SPARK TO GCS") \
-            .config("spark.jars", "your_path_file_to_jars_postgres,your_path_file_to_jars_gcs,your_path_file_to_jars_poracle  ") \
-            .getOrCreate()
-    spark._jsc.hadoopConfiguration().set('fs.gs.impl', 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem')
-    spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true')
-    spark._jsc.hadoopConfiguration().set('google.cloud.auth.service.account.json.keyfile', "your_path_file_to_key)
+      def create_sparksession():
+          spark = SparkSession.builder \
+                  .master("local[1]") \
+                  .appName("ETL SPARK TO GCS") \
+                  .config("spark.jars", "your_path_file_to_jars_postgres,your_path_file_to_jars_gcs,your_path_file_to_jars_poracle  ") \
+                  .getOrCreate()
+          spark._jsc.hadoopConfiguration().set('fs.gs.impl', 'com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem')
+          spark._jsc.hadoopConfiguration().set('fs.gs.auth.service.account.enable', 'true')
+          spark._jsc.hadoopConfiguration().set('google.cloud.auth.service.account.json.keyfile', "your_path_file_to_key)
 
 Trong ví dụ này, tôi thiết lập code như sau:
 ![image](https://github.com/hien201/ETL_TO_GCS_USING_SPARK/assets/90466915/8b88b24c-0bca-4722-8e76-1db9bab2d302)
